@@ -292,6 +292,11 @@ fun PantallaCalculadora() {
         mutableStateOf("")
     }
 
+    // Estado para guardar el resultado calculado
+    var resultado by remember {
+        mutableStateOf("")
+    }
+
     // Usamos el mismo fondo para mantener el diseño de la app
     val fondoDegradado = Brush.verticalGradient(
         colors = listOf(
@@ -382,10 +387,25 @@ fun PantallaCalculadora() {
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Botón temporal. En el siguiente commit hará el cálculo.
+                // Botón que realiza el cálculo de la propina
                 Button(
                     onClick = {
-                        // En el siguiente commit implementaremos el cálculo.
+
+                        // Convertimos el texto ingresado a número decimal.
+                        // Si el usuario escribe algo incorrecto, usamos 0.0 para evitar errores.
+                        val monto = montoCuenta.toDoubleOrNull() ?: 0.0
+                        val porcentaje = porcentajePropina.toDoubleOrNull() ?: 0.0
+
+                        // Calculamos la propina con la fórmula:
+                        // propina = monto * porcentaje / 100
+                        val propina = monto * porcentaje / 100
+
+                        // Calculamos el total a pagar sumando la cuenta más la propina
+                        val total = monto + propina
+
+                        // Guardamos el resultado en el estado.
+                        // Al cambiar este estado, Compose actualiza la pantalla automáticamente.
+                        resultado = "Propina: $${"%.2f".format(propina)}\nTotal a pagar: $${"%.2f".format(total)}"
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -405,10 +425,24 @@ fun PantallaCalculadora() {
 
                 Spacer(modifier = Modifier.height(20.dp))
 
+                // Este texto muestra el resultado calculado
                 Text(
-                    text = "Ingresa los datos y presiona el botón.",
-                    color = Color.DarkGray,
-                    fontSize = 15.sp,
+                    text = if (resultado.isEmpty()) {
+                        "Ingresa los datos y presiona el botón."
+                    } else {
+                        resultado
+                    },
+                    color = if (resultado.isEmpty()) {
+                        Color.DarkGray
+                    } else {
+                        Color(0xFFE87500)
+                    },
+                    fontSize = 18.sp,
+                    fontWeight = if (resultado.isEmpty()) {
+                        FontWeight.Normal
+                    } else {
+                        FontWeight.Bold
+                    },
                     textAlign = TextAlign.Center
                 )
             }
