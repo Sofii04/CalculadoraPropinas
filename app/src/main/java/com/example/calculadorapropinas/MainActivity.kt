@@ -110,6 +110,10 @@ import androidx.compose.ui.unit.sp
 
 // Importa el tema visual del proyecto
 import com.example.calculadorapropinas.ui.theme.CalculadoraPropinasTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.foundation.text.KeyboardOptions
+
 
 class MainActivity : ComponentActivity() {
 
@@ -278,6 +282,16 @@ fun PantallaPortada(onIniciarClick: () -> Unit) {
 @Composable
 fun PantallaCalculadora() {
 
+    // Estado para guardar el monto ingresado por el usuario
+    var montoCuenta by remember {
+        mutableStateOf("")
+    }
+
+    // Estado para guardar el porcentaje de propina ingresado por el usuario
+    var porcentajePropina by remember {
+        mutableStateOf("")
+    }
+
     // Usamos el mismo fondo para mantener el diseño de la app
     val fondoDegradado = Brush.verticalGradient(
         colors = listOf(
@@ -310,6 +324,7 @@ fun PantallaCalculadora() {
             )
         ) {
 
+            // Column organiza los elementos de la calculadora verticalmente
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -327,20 +342,73 @@ fun PantallaCalculadora() {
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                Text(
-                    text = "Aquí calcularemos la propina de una cuenta.",
-                    color = Color.DarkGray,
-                    fontSize = 16.sp,
-                    textAlign = TextAlign.Center
+                // Campo para ingresar el monto de la cuenta
+                OutlinedTextField(
+                    value = montoCuenta,
+                    onValueChange = { nuevoTexto ->
+                        montoCuenta = nuevoTexto
+                    },
+                    label = {
+                        Text("Monto de la cuenta")
+                    },
+                    placeholder = {
+                        Text("Ejemplo: 25.50")
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Campo para ingresar el porcentaje de propina
+                OutlinedTextField(
+                    value = porcentajePropina,
+                    onValueChange = { nuevoTexto ->
+                        porcentajePropina = nuevoTexto
+                    },
+                    label = {
+                        Text("Porcentaje de propina")
+                    },
+                    placeholder = {
+                        Text("Ejemplo: 10")
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number
+                    ),
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
+                // Botón temporal. En el siguiente commit hará el cálculo.
+                Button(
+                    onClick = {
+                        // En el siguiente commit implementaremos el cálculo.
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    shape = RoundedCornerShape(14.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF0D47A1)
+                    )
+                ) {
+                    Text(
+                        text = "Calcular Propina",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
                 Text(
-                    text = "En el siguiente commit agregaremos los campos de texto.",
-                    color = Color(0xFFE87500),
+                    text = "Ingresa los datos y presiona el botón.",
+                    color = Color.DarkGray,
                     fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
             }
