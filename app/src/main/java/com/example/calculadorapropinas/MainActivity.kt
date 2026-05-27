@@ -344,7 +344,14 @@ fun PantallaCalculadora() {
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
+                Spacer(modifier = Modifier.height(8.dp))
 
+                Text(
+                    text = "Calcula fácilmente cuánto dejar de propina",
+                    color = Color.DarkGray,
+                    fontSize = 15.sp,
+                    textAlign = TextAlign.Center
+                )
                 Spacer(modifier = Modifier.height(20.dp))
 
                 // Campo para ingresar el monto de la cuenta
@@ -390,23 +397,19 @@ fun PantallaCalculadora() {
                 // Botón que realiza el cálculo de la propina
                 Button(
                     onClick = {
+                        val monto = montoCuenta.toDoubleOrNull()
+                        val porcentaje = porcentajePropina.toDoubleOrNull()
 
-                        // Convertimos el texto ingresado a número decimal.
-                        // Si el usuario escribe algo incorrecto, usamos 0.0 para evitar errores.
-                        val monto = montoCuenta.toDoubleOrNull() ?: 0.0
-                        val porcentaje = porcentajePropina.toDoubleOrNull() ?: 0.0
+                        if (monto == null || porcentaje == null || monto <= 0 || porcentaje < 0) {
+                            resultado = "Por favor ingresa valores válidos."
+                        } else {
+                            val propina = monto * porcentaje / 100
+                            val total = monto + propina
 
-                        // Calculamos la propina con la fórmula:
-                        // propina = monto * porcentaje / 100
-                        val propina = monto * porcentaje / 100
+                            resultado = "Propina: $${"%.2f".format(propina)}\nTotal a pagar: $${"%.2f".format(total)}"
+                        }
 
-                        // Calculamos el total a pagar sumando la cuenta más la propina
-                        val total = monto + propina
-
-                        // Guardamos el resultado en el estado.
-                        // Al cambiar este estado, Compose actualiza la pantalla automáticamente.
-                        resultado = "Propina: $${"%.2f".format(propina)}\nTotal a pagar: $${"%.2f".format(total)}"
-                    },
+  },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
